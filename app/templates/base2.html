@@ -1,29 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>To-Do List - Finviz</title>
+    <style>
+	body {
+            font-family: sans-serif;
+            background: linear-gradient(to bottom right, #64B5F6, #2196F3);
+            background-size: cover;
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative; /* Enable absolute positioning for subtitle */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px #000000;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 2px #000000;
+        }
+
+        .subtitle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1em;
+            text-shadow: 1px 1px 2px #000000;
+            font-style: italic;
+            color: white;
+        }
+
+       table {
+            width: 70%;
+            border-collapse: collapse;
+            background-color: yellow; /* yellow table background */
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: black;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        form {
+            margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 80%;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            background-color: #008000; /* Dark green */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+        button:hover {
+            background-color: #336633;
+        }
+        .delete-button {
+            background-color: #cc0000; /* Dark red */
+            transition: background-color 0.3s ease;
+        }
+        .delete-button:hover {
+            background-color: #990000;
+        }
+        
+        td:first-child { /* Target the first cell in each row (task description) */
+          font-weight: bold; /* Make text bold */
+          color: black; /* Make text black */
+        }
+        td:nth-child(2) { /* Targets the second <td> in each row */
+        font-weight: bold;
+        color: black;
+        }
+        td:nth-child(3) { /* Targets the 3 <td> in each row */
+        font-weight: bold;
+        color: black;
+        }
+    </style>
 </head>
 <body>
     <h1>To-Do List</h1>
-    <form method="POST">
-        <input type="text" name="task" placeholder="Write your task here" required>
-        <button type="submit">Add Task</button>
-    </form>
-    
-    <h2>Your Tasks:</h2>
-    <ul>
-        {% for task, deadline in task_list %}
-            <li>{{ task }} (Due: {{ deadline }})</li>
-        {% else %}
-            <li>No tasks available.</li>
-        {% endfor %}
-    </ul>
+    <h2>S&P 500 Today <a href="https://finviz.com/map.ashx?t=sec" target="_blank">Finviz</a></h2>
+
+    <div class="subtitle">Made by Mark Shreibman</div>
 
     <form method="POST">
-        <button name="delete" type="submit">Delete Last Task</button>
+        <input type="hidden" name="action" value="add">
+        <input type="text" name="task" placeholder="Add a task">
+        <button type="submit">Add Task</button>
     </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Added Date</th>
+                <th>Completed</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr class="{% if task.completed %}completed{% endif %}">
+                    <td>{{ task.task }}</td>
+                    <td>{{ task.date_added.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ task.completed }}</td>
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="action" value="toggle">
+                            <input type="hidden" name="task_id" value="{{ task.task_id }}">
+                            <button type="submit">Toggle</button>
+                        </form>
+                        <form method="POST">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="task_id" value="{{ task.task_id }}">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 </body>
 </html>
