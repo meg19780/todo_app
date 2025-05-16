@@ -20,11 +20,14 @@ class Taskes(db.Model):
     completed = db.Column(db.Boolean, default=False) #default value is important
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     user_name = db.Column(db.String(255), nullable=True)
-
+    
     def __repr__(self):
         return '<Task %r>' % self.task
 
-
+# Ensure tables are created before starting the app
+with app.app_context():
+    db.create_all()
+    
 @app.route('/', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
@@ -60,6 +63,4 @@ def add():
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
