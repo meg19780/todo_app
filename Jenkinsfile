@@ -1,6 +1,11 @@
 pipeline {
     agent any
+    environment {
 
+        VERSION = "${BUILD_NUMBER}"
+        email = 'meg19780@gmail.com'
+
+    }
     stages {
         stage('Build Docker Image') {
             steps {
@@ -26,6 +31,28 @@ pipeline {
             }
         }
     }
+        post {
+             failure {
 
+                
+                emailext(
+                    subject: "${BUILD_NUMBER} FAILED",
+                    mimeType: 'text/html',
+                    to: "$email",
+                    body: "${BUILD_NUMBER} FAILED"
+                )
+            }
+            success {
+
+                emailext(
+                    subject: "${BUILD_NUMBER} PASSED",
+                    mimeType: 'text/html',
+                    to: "$email",
+                    body: "${BUILD_NUMBER} PASSED"
+                )
+            }
+
+        }
+    }
 
 }
