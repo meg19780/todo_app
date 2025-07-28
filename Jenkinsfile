@@ -41,6 +41,11 @@ pipeline {
                     to: "$email",
                     body: "FAILED"
                 )
+                emailext (
+                to: 'meg19780@gmail.com',
+                subject: 'Pipeline Notification',
+                body: 'This is a fail email from Jenkins.'
+            )
             }
             success {
 
@@ -49,6 +54,11 @@ pipeline {
                     mimeType: 'text/html',
                     to: "$email",
                     body: " PASSED"
+                )    
+                emailext (
+                to: 'meg19780@gmail.com',
+                subject: 'Pipeline Notification',
+                body: 'This is a test email from Jenkins.'
                 )
             }
 
