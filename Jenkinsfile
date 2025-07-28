@@ -3,7 +3,7 @@ pipeline {
     environment {
 
         VERSION = "${BUILD_NUMBER}"
-        email = 'meg19780@gmail.com'
+        email = meg1978@yandex.ru'
 
     }
     stages {
